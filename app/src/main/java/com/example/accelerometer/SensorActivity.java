@@ -22,9 +22,15 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
 
     Button start_button;
     Button stop_button;
+    Button oneHz_button;
+    Button eightHz_button;
     SensorManager manager;
     Sensor sensor;
     SensorEvent event1;
+    SimpleDateFormat simpleDateFormat;
+    String nowDate;
+    String time;
+    int Hz;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,24 +53,21 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
                 stopclick();
             }
         });
-
-        Handler handler =new Handler(getMainLooper());
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
+        oneHz_button = findViewById(R.id.oneHz_button);
+        oneHz_button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void run() {
-                Calendar calendar  = Calendar.getInstance();
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss:SS", Locale.getDefault());
-                String nowDate = simpleDateFormat.format(calendar.getTime());
-                String time = nowDate;
-
-                if (event1!=null) {
-                    System.out.println(time+" : "+event1.values[0]);
-                }else {
-                    System.out.println(time+" : null");
-                }
+            public void onClick(View v) {
+                Hz = 1000;
             }
-        },0, 125);//1Hz 1000ミリ秒, 8Hz 125ミリ秒
+        });
+        eightHz_button = findViewById(R.id.eightHz_button);
+        eightHz_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Hz = 125;
+            }
+        });
+
     }
 
     public void onSensorChanged(SensorEvent event){ //センサーの値変更時の処理
@@ -78,10 +81,31 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
     protected void onPause(){ super.onPause(); /*manager.unregisterListener(this);*/}
     public void startclick(){
         manager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_FASTEST);
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Calendar calendar  = Calendar.getInstance();
+                simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss:SS", Locale.getDefault());
+                nowDate = simpleDateFormat.format(calendar.getTime());
+                time = nowDate;
+
+                if (event1!=null) {
+                    System.out.println(time+" : "+event1.values[0]);
+                    System.out.println(Hz);
+                }else {
+                    //System.out.println(time+" : null");
+                }
+            }
+        },0, Hz);//1Hz 1000ミリ秒, 8Hz 125ミリ秒
 
     }
     public void stopclick(){
         manager.unregisterListener(this);
+        event1 = null;
+        if (event1==null) {
+            System.out.println(time+" : null");
+        }
     }
 }
 

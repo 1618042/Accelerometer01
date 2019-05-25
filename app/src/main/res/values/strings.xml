@@ -5,4 +5,6 @@
     <string name="view">view</string>
     <string name="start">start</string>
     <string name="stop">stop</string>
+    <string name="_1hz">1Hz</string>
+    <string name="_8hz">8Hz</string>
 </resources>
