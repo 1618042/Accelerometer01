@@ -62,6 +62,7 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
                     System.out.println(time+" : "+event1.values[0]);
                 }else {
                     System.out.println(time+" : null");
+
                 }
             }
         },0, 125);//1Hz 1000ミリ秒, 8Hz 125ミリ秒
