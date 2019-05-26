@@ -30,6 +30,7 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
     SensorEvent event1;
     SimpleDateFormat simpleDateFormat;
     String nowDate;
+    Timer timer;
     String time;
     int Hz = 0;
     @Override
@@ -40,14 +41,13 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
         sensor = manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         buuttonset();
 
-        Timer timer = new Timer();
+        timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 Calendar calendar  = Calendar.getInstance();
                 simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss:SS", Locale.getDefault());
                 nowDate = simpleDateFormat.format(calendar.getTime());
-                time = nowDate;
             }
         },0,1000);
 
@@ -100,14 +100,15 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
     public void startclick(){
+
         manager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_FASTEST);
-        Timer timer = new Timer();
+        final Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 if ( (event1 != null) || (Hz != 0) ) {
-                    System.out.println(time+" : event1 : "+event1.values[0]);
-                    System.out.println(Hz);
+                    //System.out.println(time+" : event1 : "+event1.values[0]);
+                    System.out.println("startclick Hz"+Hz);
                 }else {
                     System.out.println(time+" : event : null");
                 }
@@ -116,8 +117,9 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
     }
     public void stopclick(){
         manager.unregisterListener(this);
+        timer.cancel();
         event1 = null;
-        System.out.println(time+" : null");
+        System.out.println("stopclick time"+time+" : null");
     }
 }
 
