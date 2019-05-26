@@ -10,7 +10,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle saveInstanceState){
         super.onCreate(saveInstanceState);
         setContentView(R.layout.activity_main);
+    }
 
+    protected void onResume(){
+        super.onResume();
         Button insert_button = findViewById(R.id.insert_button);
         insert_button.setOnClickListener(new View.OnClickListener() {
             @Override

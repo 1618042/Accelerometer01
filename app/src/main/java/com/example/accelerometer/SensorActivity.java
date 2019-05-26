@@ -5,6 +5,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.hardware.Sensor;
@@ -32,7 +33,7 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
     Button stop_button;
     Button oneHz_button;
     Button eightHz_button;
-    Button insert_button;
+    Button back_to_main_button;
     SensorManager manager;
     Sensor sensor;
     SensorEvent event1;
@@ -52,6 +53,7 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
         manager = (SensorManager)getSystemService(Activity.SENSOR_SERVICE);
         sensor = manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         buuttonset();
+        //back_to_main();
 
         timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -73,8 +75,6 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
         start_button.setOnClickListener(this);
         stop_button = findViewById(R.id.stop_button);
         stop_button.setOnClickListener(this);
-        insert_button = findViewById(R.id.insert_button);
-        insert_button.setOnClickListener(this);
     }
     public void onSensorChanged(SensorEvent event){ //センサーの値変更時の処理
         event1 = event;
@@ -131,9 +131,6 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.stop_button :
                 stopclick();
                 break;
-            case R.id.insert_button :
-                insertData();
-                break;
             default :
                 break;
 
@@ -147,13 +144,14 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
                 if (event1 != null){
                     if(location1 != null){
                         System.out.println("time : "+time+", x : "+event1.values[0]+", y : "+event1.values[1]+", z : "+event1.values[2]+", latitude :"+location1.getLatitude()+", longitude :"+location1.getLongitude());
-                        insertData();
+                        //insertData();
                     }else{
                         System.out.println("locationがnull");
                     }
                 }else {
                     System.out.println("eventがnull");
                 }
+                insertData();
             }
         },0, Hz);//1Hz 1000ミリ秒, 8Hz 125ミリ秒
     }
@@ -188,9 +186,20 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
             values.put("latitude", "NULL");
             values.put("longitude", "NULL");
         }
-        System.out.println(values);
+        //System.out.println(values);
         db.insert("Test01db", null, values);
         db.close();
+    }
+
+    public void back_to_main(){
+        back_to_main_button = findViewById(R.id.back_to_main_button);
+        stop_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent3 = new Intent(getApplication(), MainActivity.class);
+                startActivity(intent3);
+            }
+        });
     }
 }
 
