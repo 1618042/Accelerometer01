@@ -15,11 +15,8 @@ public class OpenHelper extends SQLiteOpenHelper {
     private static final String z_axis = "z_axis";
     private static final String latitude = "latitude";
     private static final String longitude = "longitude";
-    private static final String SQL_CREATE_ENTRIES =
-            "CREATE TABLE "+ TABLE_NAME+ "("+ _ID + "INTEGER PRIMARY KEY,"
-                    +time+ "String,"+ x_axis+ "String,"+y_axis+"String,"+z_axis+"String,"
-                    +latitude+"String,"+longitude+"String)";
-    private static final String SQL_DERETE_ENTRIES = "DROP TABLE IF EXISTS " + TABLE_NAME;
+    private static final String SQL_CREATE_ENTRIES = " CREATE TABLE "+ TABLE_NAME + " ("+ _ID + " INTEGER PRIMARY KEY, " + time+ " varchar255,"+ x_axis+ " Double, "+ y_axis+" Double, "+ z_axis +" Double," + latitude +" Double, "+ longitude +" Double )";
+    private static final String SQL_DERETE_ENTRIES = " DROP TABLE IF EXISTS " + TABLE_NAME;
 
     OpenHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

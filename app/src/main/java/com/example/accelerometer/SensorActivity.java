@@ -147,6 +147,7 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
                 if (event1 != null){
                     if(location1 != null){
                         System.out.println("time : "+time+", x : "+event1.values[0]+", y : "+event1.values[1]+", z : "+event1.values[2]+", latitude :"+location1.getLatitude()+", longitude :"+location1.getLongitude());
+                        insertData();
                     }else{
                         System.out.println("locationがnull");
                     }
@@ -172,21 +173,22 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
             values.put("time","NULL");
         }
         if (event1 != null) {
-            values.put("x_axis", String.valueOf(event1.values[0]));
-            values.put("y_axis", String.valueOf(event1.values[1]));
-            values.put("z_axis", String.valueOf(event1.values[2]));
+            values.put("x_axis", Double.parseDouble(String.valueOf(event1.values[0])));
+            values.put("y_axis", Double.parseDouble(String.valueOf(event1.values[1])));
+            values.put("z_axis", Double.parseDouble(String.valueOf(event1.values[2])));
         }else {
             values.put("x_axis", "NULL");
             values.put("y_axis", "NULL");
             values.put("z_axis", "NULL");
         }
         if (location1 != null) {
-            values.put("latitude", String.valueOf(location1.getLatitude()));
-            values.put("longitude", String.valueOf(location1.getLongitude()));
+            values.put("latitude", Double.parseDouble(String.valueOf(location1.getLatitude())));
+            values.put("longitude", Double.parseDouble(String.valueOf(location1.getLongitude())));
         }else {
             values.put("latitude", "NULL");
             values.put("longitude", "NULL");
         }
+        System.out.println(values);
         db.insert("Test01db", null, values);
         db.close();
     }

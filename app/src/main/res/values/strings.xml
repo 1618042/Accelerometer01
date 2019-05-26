@@ -7,4 +7,6 @@
     <string name="stop">stop</string>
     <string name="_1hz">1Hz</string>
     <string name="_8hz">8Hz</string>
+    <string name="read">Read</string>
+    <string name="textview">TextView</string>
 </resources>
