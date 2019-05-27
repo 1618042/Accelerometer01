@@ -1,8 +1,11 @@
 package com.example.accelerometer;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -12,6 +15,7 @@ import android.widget.ListView;
 public class ViewActivity extends AppCompatActivity implements View.OnClickListener{
 
     Button read_button;
+    Button php_button;
     Cursor cursor;
     SQLiteDatabase db;
     ListView listView;
@@ -22,6 +26,8 @@ public class ViewActivity extends AppCompatActivity implements View.OnClickListe
 
         read_button = findViewById(R.id.read_button);
         read_button.setOnClickListener(this);
+        php_button = findViewById(R.id.php_button);
+        php_button.setOnClickListener(this);
         listView = findViewById(R.id.view01);
         listView.setAdapter(null);
 
@@ -31,6 +37,9 @@ public class ViewActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()){
             case R.id.read_button :
                 readData();
+                break;
+            case R.id.php_button :
+                phpset();
                 break;
             default :
                 break;
@@ -42,13 +51,15 @@ public class ViewActivity extends AppCompatActivity implements View.OnClickListe
         db = helper.getReadableDatabase();
         try{
             cursor = db.rawQuery("SELECT * from Test01db",null);
+            System.out.println(cursor);
             cursor.moveToFirst();
             if (cursor.getCount() > 0){
                 Integer[] data = new Integer[cursor.getCount()];
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.support_simple_spinner_dropdown_item);
+                adapter.add("id, time, x_axis, y_axis, z_axis, latitude, longitude                                                                     ");
                 for (int cnt = 0; cnt < cursor.getCount(); cnt++){
                     data[cnt] = cursor.getInt(0);
-                    adapter.add("ID : "+cursor.getString(0)+", time : "+cursor.getString(1)+", \nx_axis :"+cursor.getString(2)+", y_axis : "+cursor.getString(3)+", z_axis : "+cursor.getString(4)+", \nlatitude : "+cursor.getString(5)+", longitude : "+cursor.getString(6));
+                    adapter.add(""+cursor.getString(0)+", "+cursor.getString(1)+", "+cursor.getString(2)+", "+cursor.getString(3)+", "+cursor.getString(4)+", "+cursor.getString(5)+", "+cursor.getString(6));
                     cursor.moveToNext();
                     listView.setAdapter(adapter);
                 }
@@ -56,6 +67,34 @@ public class ViewActivity extends AppCompatActivity implements View.OnClickListe
             }else {
                 listView.setAdapter(null);
             }
+        }finally {
+            db.close();
+        }
+    }
+
+    public void phpset(){
+        if (PermissionChecker.checkSelfPermission(this, Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED){
+            System.out.println("1");
+        }else {
+            System.out.println("0");
+        }
+        helper = new OpenHelper(getApplicationContext());
+        db = helper.getReadableDatabase();
+        try {
+            cursor = db.rawQuery("SELECT * from Test01db",null);
+            cursor.moveToFirst();
+            if (cursor.getCount() > 0){
+                Integer[] data = new Integer[cursor.getCount()];
+                for (int cnt = 0; cnt < cursor.getCount(); cnt++){
+                    AsyncHttp post = new AsyncHttp(cursor.getDouble(0), cursor.getString(1), cursor.getDouble(2), cursor.getDouble(3), cursor.getDouble(4), cursor.getDouble(5), cursor.getDouble(6));
+                    post.execute();
+                    cursor.moveToNext();
+                }
+                cursor.close();
+            }else {
+                listView.setAdapter(null);
+            }
+            cursor.close();
         }finally {
             db.close();
         }

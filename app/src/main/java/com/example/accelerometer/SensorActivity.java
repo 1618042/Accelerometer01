@@ -201,5 +201,6 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
     }
+
 }
 

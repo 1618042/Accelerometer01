@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-comfig>
+    <domain includeSubdomains="true">
+        http://mznjerk.mizunolab.info/tests/add
+    </domain>
+</network-security-comfig>
