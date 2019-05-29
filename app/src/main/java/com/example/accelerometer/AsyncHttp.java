@@ -42,7 +42,7 @@ public class AsyncHttp extends AsyncTask<String, Integer, Boolean> {
             urlConnection = (HttpURLConnection)url.openConnection();
             urlConnection.setRequestMethod("POST");
             urlConnection.setDoOutput(true);
-            String postDataSample = "id="+this.id+"&time="+this.time+"&x_axis="+this.x_axis+"&y_axis="+this.y_axis+"&z_axis="+this.z_axis+"&latitude="+this.latitude+"&longitude="+this.longitude;
+            String postDataSample = "id="+this.id+"&time="+this.time+"&filename="+this.filename+"&x_axis="+this.x_axis+"&y_axis="+this.y_axis+"&z_axis="+this.z_axis+"&latitude="+this.latitude+"&longitude="+this.longitude;
             OutputStream out = urlConnection.getOutputStream();
             out.write(postDataSample.getBytes());
             out.flush();

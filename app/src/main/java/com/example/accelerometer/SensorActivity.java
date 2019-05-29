@@ -42,7 +42,7 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
     TextView textView01;
     SensorManager manager;
     Sensor sensor;
-    SensorEvent event1;
+    SensorEvent event1 = null;
     SimpleDateFormat simpleDateFormat;
     SimpleDateFormat simpleDateFormatname;
     String nowDate;
@@ -50,7 +50,7 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
     String time;
     int Hz = 0;
     LocationManager locationManager;
-    Location location1;
+    Location location1 = null;
     SQLiteDatabase db;
     OpenHelper helper;
     String filename;
@@ -125,11 +125,15 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View view){
         switch (view.getId()){
             case R.id.oneHz_button :
-                Hz = 1000;
+                if (Hz == 0) {
+                    Hz = 1000;
+                }
                 System.out.println("Hz : "+ Hz);
                 break;
             case R.id.eightHz_button :
-                Hz = 125;
+                if (Hz == 0) {
+                    Hz = 125;
+                }
                 System.out.println("Hz : "+ Hz);
                 break;
             case R.id.start_button :
@@ -162,13 +166,23 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
                         text1 = time+","+filename+","+event1.values[0]+","+event1.values[1]+","+event1.values[2]+","+location1.getLatitude()+","+location1.getLongitude();
                         System.out.println(text);
                     }else{
-                        System.out.println("locationがnull");
+                        System.out.println("event != null, location == null");
+                        text1 = time+","+filename+","+event1.values[0]+","+event1.values[1]+","+event1.values[2]+","+location1+","+location1;
                     }
                 }else {
-                    System.out.println("eventがnull");
+                    if (location1 != null) {
+                        System.out.println("event==null, location != null");
+                        text1 = time+","+filename+","+event1+","+event1+","+event1+","+location1.getLatitude()+","+location1.getLongitude();
+                    }else {
+                        System.out.println("event==null, location == null");
+                        text1 = time+","+filename+","+event1+","+event1+","+event1+","+location1+","+location1;
+                    }
                 }
-                textView01.setText(text1);
-                insertData();
+                text1 = time+","+filename+","+event1.values[0]+","+event1.values[1]+","+event1.values[2]+","+location1+","+location1;
+                if ( (time == null) || (filename == null) || (event1 == null) || (location1 != null) ){
+                    textView01.setText("a");
+                }
+                //insertData();
                 csvFile();
             }
         },0, Hz);//1Hz 1000ミリ秒, 8Hz 125ミリ秒
@@ -184,7 +198,20 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
         try{
             FileWriter fileWriter = new FileWriter(getFilesDir()+"/"+filename+".csv", true);
             PrintWriter printWriter = new PrintWriter(new BufferedWriter(fileWriter));
-            String[] datas1 = {time, filename, String.valueOf(event1.values[0]), String.valueOf(event1.values[1]), String.valueOf(event1.values[2]), String.valueOf(location1.getLatitude()), String.valueOf(location1.getLongitude())};
+            String[] datas1;
+            if (event1 != null) {
+                if (location1 != null) {
+                    datas1 = new String[]{time, filename, String.valueOf(event1.values[0]), String.valueOf(event1.values[1]), String.valueOf(event1.values[2]), String.valueOf(location1.getLatitude()), String.valueOf(location1.getLongitude())};
+                }else {
+                    datas1 = new String[]{time, filename, String.valueOf(event1.values[0]), String.valueOf(event1.values[1]), String.valueOf(event1.values[2]), String.valueOf(location1), String.valueOf(location1)};
+                }
+            }else {
+                if (location1 != null){
+                    datas1 = new String[]{time, filename, String.valueOf(event1), String.valueOf(event1), String.valueOf(event1), String.valueOf(location1.getLatitude()), String.valueOf(location1.getLongitude())};
+                }else {
+                    datas1 = new String[]{time, filename, String.valueOf(event1), String.valueOf(event1), String.valueOf(event1), String.valueOf(location1), String.valueOf(location1)};
+                }
+            }
             for (int i = 0; i < datas1.length; i++){
                 if (datas1[i] != null){
                     printWriter.print(datas1[i]);
@@ -217,13 +244,25 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
                     values.put(keys1[i], "NULL");
                 }
             }
+            System.out.println(values);
             db.insert("Management01db", null, values);
             j=1;
         }
         values = new ContentValues();
         String[] keys = {"time","filename","x_axis","y_axis","z_axis","latitude","longitude"};
         String[] datas2 = {time, filename};
-        Double[] datas3 = {Double.parseDouble(String.valueOf(event1.values[0])), Double.parseDouble(String.valueOf(event1.values[1])), Double.parseDouble(String.valueOf(event1.values[2])), Double.parseDouble(String.valueOf(location1.getLatitude())), Double.parseDouble(String.valueOf(location1.getLongitude()))};
+        Double[] datas3 = {};
+        if (event1 != null) {
+            if (location1 != null) {
+                datas3 = new Double[]{Double.parseDouble(String.valueOf(event1.values[0])), Double.parseDouble(String.valueOf(event1.values[1])), Double.parseDouble(String.valueOf(event1.values[2])), Double.parseDouble(String.valueOf(location1.getLatitude())), Double.parseDouble(String.valueOf(location1.getLongitude()))};
+            }else {
+                datas3 = new Double[]{Double.parseDouble(String.valueOf(event1.values[0])), Double.parseDouble(String.valueOf(event1.values[1])), Double.parseDouble(String.valueOf(event1.values[2])), Double.parseDouble(String.valueOf(location1)), Double.parseDouble(String.valueOf(location1))};
+            }
+        }else if (location1 != null){
+            datas3 = new Double[]{Double.parseDouble(String.valueOf(event1)), Double.parseDouble(String.valueOf(event1)), Double.parseDouble(String.valueOf(event1)), Double.parseDouble(String.valueOf(location1.getLatitude())), Double.parseDouble(String.valueOf(location1.getLongitude()))};
+        }else {
+
+        }
         for (int i = 0; i < datas2.length + datas3.length; i++){
             if (i < datas2.length) {
                 values.put(keys[i], datas2[i]);
