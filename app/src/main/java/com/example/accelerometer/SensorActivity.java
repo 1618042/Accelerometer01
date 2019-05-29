@@ -16,11 +16,15 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import org.json.JSONException;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -55,6 +59,7 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
     OpenHelper helper;
     String filename;
     int j = 0;
+    String text1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -155,34 +160,40 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
     }
     public void startclick(){
         manager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_FASTEST);
+        final Handler handler = new Handler();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                String text = null;
-                String text1 = null;
+                String text;
+                final String text1;
                 if (event1 != null){
                     if(location1 != null){
                         text = "time:"+time+"filename:"+filename+", x:"+event1.values[0]+", y:"+event1.values[1]+", z:"+event1.values[2]+", latitude:"+location1.getLatitude()+", longitude:"+location1.getLongitude();
-                        text1 = time+","+filename+","+event1.values[0]+","+event1.values[1]+","+event1.values[2]+","+location1.getLatitude()+","+location1.getLongitude();
-                        System.out.println(text);
+                        text1 = time+", "+filename+", "+event1.values[0]+", "+event1.values[1]+", "+event1.values[2]+", "+location1.getLatitude()+", "+location1.getLongitude();
+                        System.out.println(text1);
                     }else{
                         System.out.println("event != null, location == null");
-                        text1 = time+","+filename+","+event1.values[0]+","+event1.values[1]+","+event1.values[2]+","+location1+","+location1;
+                        text1 = time+", "+filename+", "+event1.values[0]+", "+event1.values[1]+", "+event1.values[2]+", "+"NULL"+", "+"NULL";
+                        System.out.println(text1);
                     }
                 }else {
                     if (location1 != null) {
                         System.out.println("event==null, location != null");
-                        text1 = time+","+filename+","+event1+","+event1+","+event1+","+location1.getLatitude()+","+location1.getLongitude();
+                        text1 = time+", "+filename+", "+event1+", "+event1+", "+event1+", "+location1.getLatitude()+", "+location1.getLongitude();
+                        System.out.println(text1);
                     }else {
                         System.out.println("event==null, location == null");
-                        text1 = time+","+filename+","+event1+","+event1+","+event1+","+location1+","+location1;
+                        text1 = time+", "+filename+", "+event1+", "+event1+", "+event1+", "+location1+", "+location1;
+                        System.out.println(text1);
                     }
                 }
-                text1 = time+","+filename+","+event1.values[0]+","+event1.values[1]+","+event1.values[2]+","+location1+","+location1;
-                if ( (time == null) || (filename == null) || (event1 == null) || (location1 != null) ){
-                    textView01.setText("a");
-                }
-                //insertData();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        textView01.setText(text1);
+                    }
+                });
+                insertData();
                 csvFile();
             }
         },0, Hz);//1Hz 1000ミリ秒, 8Hz 125ミリ秒
@@ -251,17 +262,20 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
         values = new ContentValues();
         String[] keys = {"time","filename","x_axis","y_axis","z_axis","latitude","longitude"};
         String[] datas2 = {time, filename};
-        Double[] datas3 = {};
+        Double[] datas3;
+        Double Null = null;
         if (event1 != null) {
             if (location1 != null) {
                 datas3 = new Double[]{Double.parseDouble(String.valueOf(event1.values[0])), Double.parseDouble(String.valueOf(event1.values[1])), Double.parseDouble(String.valueOf(event1.values[2])), Double.parseDouble(String.valueOf(location1.getLatitude())), Double.parseDouble(String.valueOf(location1.getLongitude()))};
             }else {
-                datas3 = new Double[]{Double.parseDouble(String.valueOf(event1.values[0])), Double.parseDouble(String.valueOf(event1.values[1])), Double.parseDouble(String.valueOf(event1.values[2])), Double.parseDouble(String.valueOf(location1)), Double.parseDouble(String.valueOf(location1))};
+                datas3 = new Double[]{Double.parseDouble(String.valueOf(event1.values[0])), Double.parseDouble(String.valueOf(event1.values[1])), Double.parseDouble(String.valueOf(event1.values[2])), Null, Null};
             }
-        }else if (location1 != null){
-            datas3 = new Double[]{Double.parseDouble(String.valueOf(event1)), Double.parseDouble(String.valueOf(event1)), Double.parseDouble(String.valueOf(event1)), Double.parseDouble(String.valueOf(location1.getLatitude())), Double.parseDouble(String.valueOf(location1.getLongitude()))};
         }else {
-
+            if (location1 != null){
+                datas3 = new Double[]{Double.parseDouble(String.valueOf(event1)), Double.parseDouble(String.valueOf(event1)), Double.parseDouble(String.valueOf(event1)), Double.parseDouble(String.valueOf(location1.getLatitude())), Double.parseDouble(String.valueOf(location1.getLongitude()))};
+            }else {
+                datas3 = new Double[]{Double.parseDouble(String.valueOf(event1)), Double.parseDouble(String.valueOf(event1)), Double.parseDouble(String.valueOf(event1)), Double.parseDouble(String.valueOf(location1)), Double.parseDouble(String.valueOf(location1))};
+            }
         }
         for (int i = 0; i < datas2.length + datas3.length; i++){
             if (i < datas2.length) {
