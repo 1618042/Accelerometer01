@@ -286,7 +286,7 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
                 values.put(keys[i],"NULL");
             }
         }
-        //System.out.println(values);
+        System.out.println(values);
         db.insert("Test01db", null, values);
         db.close();
     }

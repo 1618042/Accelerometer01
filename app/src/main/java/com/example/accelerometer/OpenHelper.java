@@ -17,7 +17,7 @@ public class OpenHelper extends SQLiteOpenHelper {
     private static final String latitude = "latitude";
     private static final String longitude = "longitude";
     private static final String filename = "filename";
-    private static final String SQL_CREATE_ENTRIES = " CREATE TABLE "+ TABLE_NAME + " ("+ _ID + " INTEGER PRIMARY KEY, " + time+ " varchar255,"+ x_axis+ " Double, "+ y_axis+" Double, "+ z_axis +" Double," + latitude +" Double, "+ longitude +" Double )";
+    private static final String SQL_CREATE_ENTRIES = " CREATE TABLE "+ TABLE_NAME + " ("+ _ID + " INTEGER PRIMARY KEY, " + time+ " varchar255,"+ filename+ " varchar255,"+ x_axis+ " Double, "+ y_axis+" Double, "+ z_axis +" Double," + latitude +" Double, "+ longitude +" Double )";
     private static final String MSQL_CREATE_ENTRIES = " CREATE TABLE "+ TABLE_NAME2 + " ("+ _ID + " INTEGER PRIMARY KEY, " + filename+ " varchar255 )";
     private static final String SQL_DERETE_ENTRIES = " DROP TABLE IF EXISTS " + TABLE_NAME;
 
