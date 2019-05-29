@@ -56,10 +56,10 @@ public class ViewActivity extends AppCompatActivity implements View.OnClickListe
             if (cursor.getCount() > 0){
                 Integer[] data = new Integer[cursor.getCount()];
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.support_simple_spinner_dropdown_item);
-                adapter.add("id, time, x_axis, y_axis, z_axis, latitude, longitude                                                                     ");
+                adapter.add("filename, id, time, x_axis, y_axis, z_axis, latitude, longitude                                                                     ");
                 for (int cnt = 0; cnt < cursor.getCount(); cnt++){
                     data[cnt] = cursor.getInt(0);
-                    adapter.add(""+cursor.getString(0)+", "+cursor.getString(1)+", "+cursor.getString(2)+", "+cursor.getString(3)+", "+cursor.getString(4)+", "+cursor.getString(5)+", "+cursor.getString(6));
+                    adapter.add(""+cursor.getString(0)+", "+cursor.getString(1)+", "+cursor.getString(2)+", "+cursor.getString(3)+", "+cursor.getString(4)+", "+cursor.getString(5)+", "+cursor.getString(6)+", "+cursor.getString(7));
                     cursor.moveToNext();
                     listView.setAdapter(adapter);
                 }
@@ -81,12 +81,29 @@ public class ViewActivity extends AppCompatActivity implements View.OnClickListe
         helper = new OpenHelper(getApplicationContext());
         db = helper.getReadableDatabase();
         try {
+            cursor = db.rawQuery("SELECT * from Management01db",null);
+            cursor.moveToFirst();
+            if (cursor.getCount() > 0){
+                Integer[] data = new Integer[cursor.getCount()];
+                for (int cnt = 0; cnt < cursor.getCount(); cnt++){
+                    FAsyncHttp post1 = new FAsyncHttp(cursor.getString(0));
+                    post1.execute();
+                    cursor.moveToNext();
+                }
+                cursor.close();
+            }
+            cursor.close();
+        }finally {
+            db.close();
+        }
+        db = helper.getReadableDatabase();
+        try {
             cursor = db.rawQuery("SELECT * from Test01db",null);
             cursor.moveToFirst();
             if (cursor.getCount() > 0){
                 Integer[] data = new Integer[cursor.getCount()];
                 for (int cnt = 0; cnt < cursor.getCount(); cnt++){
-                    AsyncHttp post = new AsyncHttp(cursor.getDouble(0), cursor.getString(1), cursor.getDouble(2), cursor.getDouble(3), cursor.getDouble(4), cursor.getDouble(5), cursor.getDouble(6));
+                    AsyncHttp post = new AsyncHttp(cursor.getDouble(0), cursor.getString(1), cursor.getString(2), cursor.getDouble(3), cursor.getDouble(4), cursor.getDouble(5), cursor.getDouble(6), cursor.getDouble(7));
                     post.execute();
                     cursor.moveToNext();
                 }

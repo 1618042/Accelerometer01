@@ -8,6 +8,7 @@ public class OpenHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "Test01.db";
     private static final String TABLE_NAME = "Test01db";
+    private static final String TABLE_NAME2 = "Management01db";
     private static final String _ID = "_id";
     private static final String time = "time";
     private static final String x_axis = "x_axis";
@@ -15,7 +16,9 @@ public class OpenHelper extends SQLiteOpenHelper {
     private static final String z_axis = "z_axis";
     private static final String latitude = "latitude";
     private static final String longitude = "longitude";
+    private static final String filename = "filename";
     private static final String SQL_CREATE_ENTRIES = " CREATE TABLE "+ TABLE_NAME + " ("+ _ID + " INTEGER PRIMARY KEY, " + time+ " varchar255,"+ x_axis+ " Double, "+ y_axis+" Double, "+ z_axis +" Double," + latitude +" Double, "+ longitude +" Double )";
+    private static final String MSQL_CREATE_ENTRIES = " CREATE TABLE "+ TABLE_NAME2 + " ("+ _ID + " INTEGER PRIMARY KEY, " + filename+ " varchar255 )";
     private static final String SQL_DERETE_ENTRIES = " DROP TABLE IF EXISTS " + TABLE_NAME;
 
     OpenHelper(Context context){
@@ -23,6 +26,7 @@ public class OpenHelper extends SQLiteOpenHelper {
     }
 
     public void onCreate(SQLiteDatabase db){
+        db.execSQL(MSQL_CREATE_ENTRIES);
         db.execSQL(SQL_CREATE_ENTRIES);
     }
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){

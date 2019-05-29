@@ -20,7 +20,12 @@ import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -34,10 +39,12 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
     Button oneHz_button;
     Button eightHz_button;
     Button back_to_main_button;
+    TextView textView01;
     SensorManager manager;
     Sensor sensor;
     SensorEvent event1;
     SimpleDateFormat simpleDateFormat;
+    SimpleDateFormat simpleDateFormatname;
     String nowDate;
     Timer timer;
     String time;
@@ -46,6 +53,8 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
     Location location1;
     SQLiteDatabase db;
     OpenHelper helper;
+    String filename;
+    int j = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +70,7 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
             public void run() {
                 Calendar calendar  = Calendar.getInstance();
                 simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss:SS", Locale.getDefault());
+                simpleDateFormatname = new SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault());
                 nowDate = simpleDateFormat.format(calendar.getTime());
                 time = nowDate;
             }
@@ -75,6 +85,7 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
         start_button.setOnClickListener(this);
         stop_button = findViewById(R.id.stop_button);
         stop_button.setOnClickListener(this);
+        textView01 = findViewById(R.id.textView01);
     }
     public void onSensorChanged(SensorEvent event){ //センサーの値変更時の処理
         event1 = event;
@@ -123,6 +134,8 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
                 break;
             case R.id.start_button :
                 if (Hz != 0) {
+                    Calendar calendar  = Calendar.getInstance();
+                    filename = simpleDateFormatname.format(calendar.getTime());
                     startclick();
                 }else {
                     System.out.println("Hz が指定されていません。");
@@ -141,17 +154,22 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
+                String text = null;
+                String text1 = null;
                 if (event1 != null){
                     if(location1 != null){
-                        System.out.println("time : "+time+", x : "+event1.values[0]+", y : "+event1.values[1]+", z : "+event1.values[2]+", latitude :"+location1.getLatitude()+", longitude :"+location1.getLongitude());
-                        //insertData();
+                        text = "time:"+time+"filename:"+filename+", x:"+event1.values[0]+", y:"+event1.values[1]+", z:"+event1.values[2]+", latitude:"+location1.getLatitude()+", longitude:"+location1.getLongitude();
+                        text1 = time+","+filename+","+event1.values[0]+","+event1.values[1]+","+event1.values[2]+","+location1.getLatitude()+","+location1.getLongitude();
+                        System.out.println(text);
                     }else{
                         System.out.println("locationがnull");
                     }
                 }else {
                     System.out.println("eventがnull");
                 }
+                textView01.setText(text1);
                 insertData();
+                csvFile();
             }
         },0, Hz);//1Hz 1000ミリ秒, 8Hz 125ミリ秒
     }
@@ -159,32 +177,61 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
         manager.unregisterListener(this);
         timer.cancel();
         event1 = null;
-        System.out.println("stopclick time"+time+" : null");
+        System.out.println("stopclick time:"+time+", event:null");
+    }
+
+    public void csvFile(){
+        try{
+            FileWriter fileWriter = new FileWriter(getFilesDir()+"/"+filename+".csv", true);
+            PrintWriter printWriter = new PrintWriter(new BufferedWriter(fileWriter));
+            String[] datas1 = {time, filename, String.valueOf(event1.values[0]), String.valueOf(event1.values[1]), String.valueOf(event1.values[2]), String.valueOf(location1.getLatitude()), String.valueOf(location1.getLongitude())};
+            for (int i = 0; i < datas1.length; i++){
+                if (datas1[i] != null){
+                    printWriter.print(datas1[i]);
+                }else {
+                    printWriter.print("NULL");
+                }
+                if (i <= datas1.length -2){
+                    printWriter.print(", ");
+                }
+            }
+            printWriter.println();
+            printWriter.close();
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
     private void insertData(){
         helper = new OpenHelper(this);
         db = helper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        if (time != null) {
-            values.put("time", time);
-        }else {
-            values.put("time","NULL");
+        ContentValues values;
+        if (j==0){
+            values = new ContentValues();
+            String[] keys1 = {"filename"};
+            String[] data4 = {filename};
+            for (int i = 0; i < keys1.length; i++) {
+                if (data4[i] != null) {
+                    values.put(keys1[i], data4[i]);
+                } else {
+                    values.put(keys1[i], "NULL");
+                }
+            }
+            db.insert("Management01db", null, values);
+            j=1;
         }
-        if (event1 != null) {
-            values.put("x_axis", Double.parseDouble(String.valueOf(event1.values[0])));
-            values.put("y_axis", Double.parseDouble(String.valueOf(event1.values[1])));
-            values.put("z_axis", Double.parseDouble(String.valueOf(event1.values[2])));
-        }else {
-            values.put("x_axis", "NULL");
-            values.put("y_axis", "NULL");
-            values.put("z_axis", "NULL");
-        }
-        if (location1 != null) {
-            values.put("latitude", Double.parseDouble(String.valueOf(location1.getLatitude())));
-            values.put("longitude", Double.parseDouble(String.valueOf(location1.getLongitude())));
-        }else {
-            values.put("latitude", "NULL");
-            values.put("longitude", "NULL");
+        values = new ContentValues();
+        String[] keys = {"time","filename","x_axis","y_axis","z_axis","latitude","longitude"};
+        String[] datas2 = {time, filename};
+        Double[] datas3 = {Double.parseDouble(String.valueOf(event1.values[0])), Double.parseDouble(String.valueOf(event1.values[1])), Double.parseDouble(String.valueOf(event1.values[2])), Double.parseDouble(String.valueOf(location1.getLatitude())), Double.parseDouble(String.valueOf(location1.getLongitude()))};
+        for (int i = 0; i < datas2.length + datas3.length; i++){
+            if (i < datas2.length) {
+                values.put(keys[i], datas2[i]);
+            }else if (datas3[i-datas2.length] != null){
+                values.put(keys[i], datas3[i-datas2.length]);
+            }else {
+                values.put(keys[i],"NULL");
+            }
         }
         //System.out.println(values);
         db.insert("Test01db", null, values);
