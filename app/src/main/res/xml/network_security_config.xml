@@ -2,5 +2,6 @@
 <network-security-comfig>
     <domain includeSubdomains="true">
         http://mznjerk.mizunolab.info/tests/add
+        http://mznjerk.mizunolab.info/managements/add
     </domain>
 </network-security-comfig>
