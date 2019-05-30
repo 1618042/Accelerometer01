@@ -10,10 +10,11 @@ import java.net.URL;
 
 public class FAsyncHttp extends AsyncTask<String, Integer, Boolean> {
     String filename;
-    String id;
+    Double id;
     HttpURLConnection urlConnection = null; //HTTPコネクション管理用
     Boolean flg = false;
-    public FAsyncHttp(String filename){
+    public FAsyncHttp(Double id, String filename){
+        this.id = id;
         this.filename = filename;
     }
     @Override

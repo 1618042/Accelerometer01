@@ -86,7 +86,7 @@ public class ViewActivity extends AppCompatActivity implements View.OnClickListe
             if (cursor.getCount() > 0){
                 Integer[] data = new Integer[cursor.getCount()];
                 for (int cnt = 0; cnt < cursor.getCount(); cnt++){
-                    FAsyncHttp post1 = new FAsyncHttp(cursor.getString(0));
+                    FAsyncHttp post1 = new FAsyncHttp(cursor.getDouble(0), cursor.getString(1));
                     post1.execute();
                     cursor.moveToNext();
                 }
