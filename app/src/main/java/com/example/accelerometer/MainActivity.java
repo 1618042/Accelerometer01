@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        sensorActivity = new SensorActivity();
+        /*sensorActivity = new SensorActivity();
         location1 = sensorActivity.location1;
         Button maps_button = findViewById(R.id.maps_button);
         maps_button.setOnClickListener(new View.OnClickListener() {
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
                     System.out.println("location == NULL");
                 }
             }
-        });
+        });*/
 
     }
 }

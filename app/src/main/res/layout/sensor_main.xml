@@ -64,10 +64,10 @@
 
     <TextView
         android:id="@+id/textView01"
-        android:layout_width="300dp"
-        android:layout_height="17dp"
-        android:layout_marginStart="56dp"
-        android:layout_marginLeft="56dp"
+        android:layout_width="557dp"
+        android:layout_height="47dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginLeft="3dp"
         android:layout_marginTop="372dp"
         android:text="@string/textview"
         app:layout_constraintStart_toStartOf="parent"

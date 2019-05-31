@@ -17,9 +17,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    SensorActivity sensorActivity;
-    Location location1;
 
+    String[] latitude;
+    String[] longitude;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,11 +28,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        System.out.println("Maps");
+        Intent intent3 = getIntent();
+        latitude = intent3.getStringArrayExtra("String latitude");
+        longitude = intent3.getStringArrayExtra("String longitude");
     }
     public void onResume(){
         super.onResume();
-        sensorActivity = new SensorActivity();
-        location1 = sensorActivity.location1;
     }
 
 
@@ -48,11 +50,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        /*Double latitude1 = Double.parseDouble(latitude[latitude.length - 1]);
+        Double longitude1 = Double.parseDouble(latitude[longitude.length - 1]);
+        for (int i = 1; latitude[latitude.length-i] != null; i++) {
+            latitude1 = Double.parseDouble(latitude[latitude.length - i]);
+            longitude1 = Double.parseDouble(latitude[longitude.length - i]);
+        }*/
 
-        Double latitude = Double.parseDouble(String.valueOf(location1.getLatitude()));
-        Double longitude = Double.parseDouble(String.valueOf(location1.getLongitude()));
+        String latitude1 = null, longitude1 = null;
+        int i = 1;
+        while ((latitude[latitude.length -i] == null) || (longitude[longitude.length -i] == null)){
+            i++;
+        }
+        latitude1 = latitude[latitude.length -i];
+        longitude1 = longitude[longitude.length -i];
+        System.out.println(latitude1+", "+longitude1);
+        Double latitude2 = Double.parseDouble(latitude1);
+        Double longitude2 = Double.parseDouble(longitude1);
+        System.out.println(latitude2+", "+longitude2);
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(latitude, longitude);
+        LatLng sydney = new LatLng(latitude2, longitude2);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }

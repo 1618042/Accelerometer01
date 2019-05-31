@@ -1,6 +1,7 @@
 package com.example.accelerometer;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -16,10 +17,13 @@ public class ViewActivity extends AppCompatActivity implements View.OnClickListe
 
     Button read_button;
     Button php_button;
+    Button mappu_button;
     Cursor cursor;
     SQLiteDatabase db;
     ListView listView;
     OpenHelper helper;
+    String[] latitude;
+    String[] longitude;
     protected void onCreate(Bundle saveInstanceState){
         super.onCreate(saveInstanceState);
         setContentView(R.layout.view_main);
@@ -28,9 +32,41 @@ public class ViewActivity extends AppCompatActivity implements View.OnClickListe
         read_button.setOnClickListener(this);
         php_button = findViewById(R.id.php_button);
         php_button.setOnClickListener(this);
+        mappu_button =findViewById(R.id.mappu_button);
         listView = findViewById(R.id.view01);
         listView.setAdapter(null);
 
+    }
+    protected void onResume(){
+        super.onResume();
+        mappu_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                db = helper.getReadableDatabase();
+                try {
+                    cursor = db.rawQuery("SELECT * from Test01db", null);
+                    cursor.moveToFirst();
+                    if (cursor.getCount() > 0){
+                        latitude = new String[cursor.getCount()];
+                        longitude = new String[cursor.getCount()];
+                        for (int cnt = 0; cnt < cursor.getCount(); cnt++){
+                            latitude[cnt] = cursor.getString(6);
+                            longitude[cnt] = cursor.getString(7);
+                            cursor.moveToNext();
+                        }
+                        cursor.close();
+                    }
+                    cursor.close();
+                }finally {
+                    db.close();
+                }
+                System.out.println("view");
+                Intent intent3 = new Intent(getApplication(), MapsActivity.class);
+                intent3.putExtra("String latitude", latitude);
+                intent3.putExtra("String longitude", longitude);
+                startActivity(intent3);
+            }
+        });
     }
 
     public void onClick(View view){
