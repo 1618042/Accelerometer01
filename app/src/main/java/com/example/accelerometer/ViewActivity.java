@@ -65,6 +65,7 @@ public class ViewActivity extends AppCompatActivity implements View.OnClickListe
                 intent3.putExtra("String latitude", latitude);
                 intent3.putExtra("String longitude", longitude);
                 startActivity(intent3);
+
             }
         });
     }
