@@ -147,16 +147,11 @@ public class ViewActivity extends AppCompatActivity implements View.OnClickListe
             cursor.moveToFirst();
             if (cursor.getCount() > 0){
                 Integer[] data = new Integer[cursor.getCount()];
-                int filelength = file_id.length;
                 int i=0;
-                int filecnt = filelength - (filelength-i);
                 for (int cnt = 0; cnt < cursor.getCount(); cnt++){
-                    //System.out.println("file_id[0] : "+file_id[0]);
                     if (Double.parseDouble(cursor.getString(2)) != Double.parseDouble(file_id[i])){
                         i++;
                     }
-                    System.out.print("cursor : "+cursor.getString(2));
-                    System.out.println(", file_id[filecnt] : "+file_id[i]);
                     AsyncHttp post = new AsyncHttp(cursor.getDouble(0), cursor.getString(1), file_id[i], cursor.getDouble(3), cursor.getDouble(4), cursor.getDouble(5), cursor.getDouble(6), cursor.getDouble(7));
                     post.execute();
                     cursor.moveToNext();
