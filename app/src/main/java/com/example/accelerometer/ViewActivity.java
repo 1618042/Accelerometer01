@@ -117,15 +117,17 @@ public class ViewActivity extends AppCompatActivity implements View.OnClickListe
         }
         helper = new OpenHelper(getApplicationContext());
         db = helper.getReadableDatabase();
-        String file_id = null;
+        String[] file_id = null;
         try {
             cursor = db.rawQuery("SELECT * from Management01db",null);
             cursor.moveToFirst();
             if (cursor.getCount() > 0){
                 Integer[] data = new Integer[cursor.getCount()];
+                file_id = new String[cursor.getCount()];
                 for (int cnt = 0; cnt < cursor.getCount(); cnt++){
                     FAsyncHttp post1 = new FAsyncHttp(cursor.getDouble(0), cursor.getString(1));
-                    file_id = cursor.getString(1);
+                    file_id[cnt] = cursor.getString(1);
+                    System.out.println("file_id[cnt] : "+file_id[cnt]);
                     post1.execute();
                     cursor.moveToNext();
                 }
@@ -138,15 +140,24 @@ public class ViewActivity extends AppCompatActivity implements View.OnClickListe
         test01(file_id);
 
     }
-    public void test01(String file_id){
+    public void test01(String[] file_id){
         db = helper.getReadableDatabase();
         try {
             cursor = db.rawQuery("SELECT * from Test01db",null);
             cursor.moveToFirst();
             if (cursor.getCount() > 0){
                 Integer[] data = new Integer[cursor.getCount()];
+                int filelength = file_id.length;
+                int i=0;
+                int filecnt = filelength - (filelength-i);
                 for (int cnt = 0; cnt < cursor.getCount(); cnt++){
-                    AsyncHttp post = new AsyncHttp(cursor.getDouble(0), cursor.getString(1), file_id, cursor.getDouble(3), cursor.getDouble(4), cursor.getDouble(5), cursor.getDouble(6), cursor.getDouble(7));
+                    //System.out.println("file_id[0] : "+file_id[0]);
+                    if (Double.parseDouble(cursor.getString(2)) != Double.parseDouble(file_id[i])){
+                        i++;
+                    }
+                    System.out.print("cursor : "+cursor.getString(2));
+                    System.out.println(", file_id[filecnt] : "+file_id[i]);
+                    AsyncHttp post = new AsyncHttp(cursor.getDouble(0), cursor.getString(1), file_id[i], cursor.getDouble(3), cursor.getDouble(4), cursor.getDouble(5), cursor.getDouble(6), cursor.getDouble(7));
                     post.execute();
                     cursor.moveToNext();
                 }
