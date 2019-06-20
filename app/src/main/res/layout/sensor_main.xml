@@ -5,15 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:background="@drawable/background2"
     tools:context=".SensorActivity">
 
     <Button
         android:id="@+id/start_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="47dp"
-        android:layout_marginLeft="47dp"
-        android:layout_marginTop="460dp"
+        android:layout_marginStart="156dp"
+        android:layout_marginLeft="156dp"
+        android:layout_marginTop="528dp"
         android:text="@string/start"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -22,9 +23,9 @@
         android:id="@+id/stop_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="272dp"
-        android:layout_marginLeft="272dp"
-        android:layout_marginTop="460dp"
+        android:layout_marginStart="348dp"
+        android:layout_marginLeft="348dp"
+        android:layout_marginTop="528dp"
         android:text="@string/stop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -33,9 +34,9 @@
         android:id="@+id/oneHz_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="46dp"
-        android:layout_marginLeft="46dp"
-        android:layout_marginTop="179dp"
+        android:layout_marginStart="168dp"
+        android:layout_marginLeft="168dp"
+        android:layout_marginTop="400dp"
         android:text="@string/_1hz"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -44,9 +45,9 @@
         android:id="@+id/eightHz_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="135dp"
-        android:layout_marginLeft="135dp"
-        android:layout_marginTop="179dp"
+        android:layout_marginStart="340dp"
+        android:layout_marginLeft="340dp"
+        android:layout_marginTop="400dp"
         android:text="@string/_8hz"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -55,22 +56,47 @@
         android:id="@+id/back_to_main_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="161dp"
-        android:layout_marginLeft="161dp"
-        android:layout_marginTop="553dp"
+        android:layout_marginStart="256dp"
+        android:layout_marginLeft="256dp"
+        android:layout_marginTop="528dp"
         android:text="@string/back_to_main"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView01"
-        android:layout_width="557dp"
-        android:layout_height="47dp"
-        android:layout_marginStart="3dp"
-        android:layout_marginLeft="3dp"
-        android:layout_marginTop="372dp"
-        android:text="@string/textview"
+        android:layout_width="556dp"
+        android:layout_height="108dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="608dp"
+        android:text="@string/values"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <RadioGroup
+        android:id="@+id/radiogroup"
+        android:layout_width="162dp"
+        android:layout_height="139dp"
+        android:layout_marginStart="284dp"
+        android:layout_marginLeft="284dp"
+        android:layout_marginTop="147dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RadioButton
+            android:id="@+id/radioButton1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/_1Hz" />
+
+        <RadioButton
+            android:id="@+id/radioButton2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/_8Hz" />
+    </RadioGroup>
 
 </android.support.constraint.ConstraintLayout>

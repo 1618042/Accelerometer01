@@ -13,4 +13,9 @@
     <string name="title_activity_maps">Map</string>
     <string name="php">PHP</string>
     <string name="mappu">mappu</string>
+    <string name="values">取得値</string>
+    <string name="radiobutton1">RadioButton</string>
+    <string name="radiobutton2">RadioButton</string>
+    <string name="_8Hz">8HZ</string>
+    <string name="_1Hz">1HZ</string>
 </resources>
