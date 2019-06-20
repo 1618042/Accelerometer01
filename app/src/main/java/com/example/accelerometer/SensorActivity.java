@@ -22,7 +22,10 @@ import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 
@@ -43,6 +46,9 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
     Button oneHz_button;
     Button eightHz_button;
     Button back_to_main_button;
+    RadioGroup radiogroup;
+    RadioButton radioButton1;
+    RadioButton radiobutton2;
     TextView textView01;
     SensorManager manager;
     Sensor sensor;
@@ -55,6 +61,7 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
     int Hz = 0;
     LocationManager locationManager;
     Location location1 = null;
+    Double locationnull = null;
     SQLiteDatabase db;
     OpenHelper helper;
     String filename;
@@ -91,6 +98,28 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
         stop_button = findViewById(R.id.stop_button);
         stop_button.setOnClickListener(this);
         textView01 = findViewById(R.id.textView01);
+        radiogroup = findViewById(R.id.radiogroup);
+        radioButton1 = findViewById(R.id.radioButton1);
+        radiobutton2 = findViewById(R.id.radioButton2);
+        radiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId != -1){
+                    if (findViewById(checkedId) == radioButton1){
+                        if (Hz==0){
+                            Hz = 1000;
+                        }
+                    }
+                    if (findViewById(checkedId) == radiobutton2){
+                        if (Hz==0){
+                            Hz = 125;
+                        }
+                    }
+                } else {
+                    System.out.println("Hz が指定されていません。");
+                }
+            }
+        });
     }
     public void onSensorChanged(SensorEvent event){ //センサーの値変更時の処理
         event1 = event;
@@ -127,6 +156,7 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
 
     }
     protected void onPause(){ super.onPause(); manager.unregisterListener(this);}
+
     public void onClick(View view){
         switch (view.getId()){
             case R.id.oneHz_button :
@@ -164,26 +194,35 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                String text;
+                //String text;
                 final String text1;
+                //String a = "lo : "+location1+", null : "+locationnull;
+                //System.out.println(a);
+                if (location1 != null) {
+                    if (locationnull == location1.getLatitude()) {
+                        location1 = null;
+                    } else {
+                        locationnull = location1.getLatitude();
+                    }
+                }
                 if (event1 != null){
                     if(location1 != null){
-                        text = "time:"+time+"filename:"+filename+", x:"+event1.values[0]+", y:"+event1.values[1]+", z:"+event1.values[2]+", latitude:"+location1.getLatitude()+", longitude:"+location1.getLongitude();
-                        text1 = time+", "+filename+", "+event1.values[0]+", "+event1.values[1]+", "+event1.values[2]+", "+location1.getLatitude()+", "+location1.getLongitude();
+                        //text = "time:"+time+"filename:"+filename+", x:"+event1.values[0]+", y:"+event1.values[1]+", z:"+event1.values[2]+", latitude:"+location1.getLatitude()+", longitude:"+location1.getLongitude();
+                        text1 = time+", \n"+filename+", \n"+event1.values[0]+", "+event1.values[1]+", "+event1.values[2]+", \n"+location1.getLatitude()+", "+location1.getLongitude();
                         System.out.println(text1);
                     }else{
                         System.out.println("event != null, location == null");
-                        text1 = time+", "+filename+", "+event1.values[0]+", "+event1.values[1]+", "+event1.values[2]+", "+"NULL"+", "+"NULL";
+                        text1 = time+", \n"+filename+", \n"+event1.values[0]+", "+event1.values[1]+", "+event1.values[2]+", \n"+"NULL"+", "+"NULL";
                         System.out.println(text1);
                     }
                 }else {
                     if (location1 != null) {
                         System.out.println("event==null, location != null");
-                        text1 = time+", "+filename+", "+event1+", "+event1+", "+event1+", "+location1.getLatitude()+", "+location1.getLongitude();
+                        text1 = time+", \n"+filename+", \n"+event1+", "+event1+", "+event1+", \n"+location1.getLatitude()+", "+location1.getLongitude();
                         System.out.println(text1);
                     }else {
                         System.out.println("event==null, location == null");
-                        text1 = time+", "+filename+", "+event1+", "+event1+", "+event1+", "+location1+", "+location1;
+                        text1 = time+", \n"+filename+", \n"+event1+", "+event1+", "+event1+", \n"+location1+", "+location1;
                         System.out.println(text1);
                     }
                 }
@@ -209,6 +248,13 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
         try{
             FileWriter fileWriter = new FileWriter(getFilesDir()+"/"+filename+".csv", true);
             PrintWriter printWriter = new PrintWriter(new BufferedWriter(fileWriter));
+            if (location1 != null) {
+                if (locationnull == location1.getLatitude()) {
+                    location1 = null;
+                } else {
+                    locationnull = location1.getLatitude();
+                }
+            }
             String[] datas1;
             if (event1 != null) {
                 if (location1 != null) {
@@ -264,6 +310,13 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
         String[] datas2 = {time, filename};
         Double[] datas3;
         Double Null = null;
+        if (location1 != null) {
+            if (locationnull == location1.getLatitude()) {
+                location1 = null;
+            } else {
+                locationnull = location1.getLatitude();
+            }
+        }
         if (event1 != null) {
             if (location1 != null) {
                 datas3 = new Double[]{Double.parseDouble(String.valueOf(event1.values[0])), Double.parseDouble(String.valueOf(event1.values[1])), Double.parseDouble(String.valueOf(event1.values[2])), Double.parseDouble(String.valueOf(location1.getLatitude())), Double.parseDouble(String.valueOf(location1.getLongitude()))};
