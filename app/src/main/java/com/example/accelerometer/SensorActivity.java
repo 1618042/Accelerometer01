@@ -61,7 +61,7 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
     int Hz = 0;
     LocationManager locationManager;
     Location location1 = null;
-    Double locationnull = null;
+    Double locationnull = Double.NaN;
     SQLiteDatabase db;
     OpenHelper helper;
     String filename;
@@ -241,6 +241,8 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
         manager.unregisterListener(this);
         timer.cancel();
         event1 = null;
+        String stop = "FINISH";
+        textView01.setText(stop);
         System.out.println("stopclick time:"+time+", event:null");
     }
 
@@ -248,13 +250,7 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
         try{
             FileWriter fileWriter = new FileWriter(getFilesDir()+"/"+filename+".csv", true);
             PrintWriter printWriter = new PrintWriter(new BufferedWriter(fileWriter));
-            if (location1 != null) {
-                if (locationnull == location1.getLatitude()) {
-                    location1 = null;
-                } else {
-                    locationnull = location1.getLatitude();
-                }
-            }
+
             String[] datas1;
             if (event1 != null) {
                 if (location1 != null) {
@@ -310,13 +306,7 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
         String[] datas2 = {time, filename};
         Double[] datas3;
         Double Null = null;
-        if (location1 != null) {
-            if (locationnull == location1.getLatitude()) {
-                location1 = null;
-            } else {
-                locationnull = location1.getLatitude();
-            }
-        }
+
         if (event1 != null) {
             if (location1 != null) {
                 datas3 = new Double[]{Double.parseDouble(String.valueOf(event1.values[0])), Double.parseDouble(String.valueOf(event1.values[1])), Double.parseDouble(String.valueOf(event1.values[2])), Double.parseDouble(String.valueOf(location1.getLatitude())), Double.parseDouble(String.valueOf(location1.getLongitude()))};
