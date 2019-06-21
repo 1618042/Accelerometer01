@@ -29,6 +29,7 @@ public class FAsyncHttp extends AsyncTask<String, Integer, Boolean> {
             urlConnection.setRequestMethod("POST");
             urlConnection.setDoOutput(true);
             String postDataSample = "id="+this.filename+"&filename="+this.filename;
+            System.out.println(postDataSample);
             OutputStream out = urlConnection.getOutputStream();
             out.write(postDataSample.getBytes());
             out.flush();

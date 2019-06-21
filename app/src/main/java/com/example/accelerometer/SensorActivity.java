@@ -41,6 +41,8 @@ import java.util.TimerTask;
 
 public class SensorActivity extends AppCompatActivity implements View.OnClickListener, SensorEventListener, LocationListener {
 
+    int count = 0;
+
     Button start_button;
     Button stop_button;
     Button oneHz_button;
@@ -53,6 +55,7 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
     SensorManager manager;
     Sensor sensor;
     SensorEvent event1 = null;
+    SensorEvent eventnull = null;
     SimpleDateFormat simpleDateFormat;
     SimpleDateFormat simpleDateFormatname;
     String nowDate;
@@ -81,7 +84,7 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void run() {
                 Calendar calendar  = Calendar.getInstance();
-                simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss:SS", Locale.getDefault());
+                simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss:SSS", Locale.getDefault());
                 simpleDateFormatname = new SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault());
                 nowDate = simpleDateFormat.format(calendar.getTime());
                 time = nowDate;
@@ -123,6 +126,7 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
     }
     public void onSensorChanged(SensorEvent event){ //センサーの値変更時の処理
         event1 = event;
+        count = count+1;
     }
     public void onAccuracyChanged(Sensor sensor, int accuracy){ //センサー精度変更時の処理
     }
@@ -205,6 +209,7 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
                         locationnull = location1.getLatitude();
                     }
                 }
+
                 if (event1 != null){
                     if(location1 != null){
                         //text = "time:"+time+"filename:"+filename+", x:"+event1.values[0]+", y:"+event1.values[1]+", z:"+event1.values[2]+", latitude:"+location1.getLatitude()+", longitude:"+location1.getLongitude();
@@ -226,6 +231,7 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
                         System.out.println(text1);
                     }
                 }
+                System.out.println(count);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {

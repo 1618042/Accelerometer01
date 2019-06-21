@@ -127,7 +127,7 @@ public class ViewActivity extends AppCompatActivity implements View.OnClickListe
                 for (int cnt = 0; cnt < cursor.getCount(); cnt++){
                     FAsyncHttp post1 = new FAsyncHttp(cursor.getDouble(0), cursor.getString(1));
                     file_id[cnt] = cursor.getString(1);
-                    System.out.println("file_id[cnt] : "+file_id[cnt]);
+                    //System.out.println("file_id[cnt] : "+file_id[cnt]);
                     post1.execute();
                     cursor.moveToNext();
                 }
@@ -143,7 +143,8 @@ public class ViewActivity extends AppCompatActivity implements View.OnClickListe
     public void test01(String[] file_id){
         db = helper.getReadableDatabase();
         try {
-            cursor = db.rawQuery("SELECT * from Test01db",null);
+            //cursor = db.rawQuery("SELECT * from Test01db",null);
+            cursor = db.rawQuery("SELECT * from Test01db where filename=20190621133800; ",null);
             cursor.moveToFirst();
             if (cursor.getCount() > 0){
                 Integer[] data = new Integer[cursor.getCount()];

@@ -45,6 +45,7 @@ public class AsyncHttp extends AsyncTask<String, Integer, Boolean> {
             String postDataSample = "id="+this.id+"&time="+this.time+"&management_id="+this.filename+"&x_axis="+this.x_axis+"&y_axis="+this.y_axis+"&z_axis="+this.z_axis+"&latitude="+this.latitude+"&longitude="+this.longitude;
             OutputStream out = urlConnection.getOutputStream();
             out.write(postDataSample.getBytes());
+            System.out.println(postDataSample);
             out.flush();
             out.close();
             urlConnection.getInputStream();
