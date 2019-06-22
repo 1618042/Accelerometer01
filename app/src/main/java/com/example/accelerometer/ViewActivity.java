@@ -87,7 +87,8 @@ public class ViewActivity extends AppCompatActivity implements View.OnClickListe
         helper = new OpenHelper(getApplicationContext());
         db = helper.getReadableDatabase();
         try{
-            cursor = db.rawQuery("SELECT * from Test01db",null);
+            //画面表示
+            cursor = db.rawQuery("SELECT * from Test01db ;",null);
             System.out.println(cursor);
             cursor.moveToFirst();
             if (cursor.getCount() > 0){
@@ -119,7 +120,8 @@ public class ViewActivity extends AppCompatActivity implements View.OnClickListe
         db = helper.getReadableDatabase();
         String[] file_id = null;
         try {
-            cursor = db.rawQuery("SELECT * from Management01db",null);
+            //Managementテーブルにあげるもの
+            cursor = db.rawQuery("SELECT * from Management01db;",null);
             cursor.moveToFirst();
             if (cursor.getCount() > 0){
                 Integer[] data = new Integer[cursor.getCount()];
@@ -143,8 +145,9 @@ public class ViewActivity extends AppCompatActivity implements View.OnClickListe
     public void test01(String[] file_id){
         db = helper.getReadableDatabase();
         try {
+            //Testテーブルにあげるもの
             //cursor = db.rawQuery("SELECT * from Test01db",null);
-            cursor = db.rawQuery("SELECT * from Test01db where filename=20190621133800; ",null);
+            cursor = db.rawQuery("SELECT * from Test01db; ",null);
             cursor.moveToFirst();
             if (cursor.getCount() > 0){
                 Integer[] data = new Integer[cursor.getCount()];

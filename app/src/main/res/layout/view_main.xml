@@ -19,8 +19,8 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <HorizontalScrollView
-        android:layout_width="575dp"
-        android:layout_height="802dp"
+        android:layout_width="569dp"
+        android:layout_height="640dp"
         android:layout_marginStart="9dp"
         android:layout_marginLeft="9dp"
         android:layout_marginTop="156dp"
