@@ -80,7 +80,7 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
         //back_to_main();
 
         timer = new Timer();
-        timer.schedule(new TimerTask() {
+        /*timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 Calendar calendar  = Calendar.getInstance();
@@ -89,7 +89,7 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
                 nowDate = simpleDateFormat.format(calendar.getTime());
                 time = nowDate;
             }
-        },0,1000);
+        },0,1000);*/
     }
     public void buuttonset(){
         oneHz_button = findViewById(R.id.oneHz_button);
@@ -109,14 +109,14 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId != -1){
                     if (findViewById(checkedId) == radioButton1){
-                        if (Hz==0){
+                        //if (Hz==0){
                             Hz = 1000;
-                        }
+                        //}
                     }
                     if (findViewById(checkedId) == radiobutton2){
-                        if (Hz==0){
+                        //if (Hz==0){
                             Hz = 125;
-                        }
+                        //}
                     }
                 } else {
                     System.out.println("Hz が指定されていません。");
@@ -126,7 +126,7 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
     }
     public void onSensorChanged(SensorEvent event){ //センサーの値変更時の処理
         event1 = event;
-        count = count+1;
+        //count = count+1;
     }
     public void onAccuracyChanged(Sensor sensor, int accuracy){ //センサー精度変更時の処理
     }
@@ -178,6 +178,7 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.start_button :
                 if (Hz != 0) {
                     Calendar calendar  = Calendar.getInstance();
+                    simpleDateFormatname = new SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault());
                     filename = simpleDateFormatname.format(calendar.getTime());
                     startclick();
                 }else {
@@ -198,6 +199,10 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
+                Calendar calendar  = Calendar.getInstance();
+                simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss:SSS", Locale.getDefault());
+                nowDate = simpleDateFormat.format(calendar.getTime());
+                time = nowDate;
                 //String text;
                 final String text1;
                 //String a = "lo : "+location1+", null : "+locationnull;
@@ -209,7 +214,7 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
                         locationnull = location1.getLatitude();
                     }
                 }
-
+                count = count+1;
                 if (event1 != null){
                     if(location1 != null){
                         //text = "time:"+time+"filename:"+filename+", x:"+event1.values[0]+", y:"+event1.values[1]+", z:"+event1.values[2]+", latitude:"+location1.getLatitude()+", longitude:"+location1.getLongitude();
@@ -232,6 +237,7 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
                     }
                 }
                 System.out.println(count);
+
                 handler.post(new Runnable() {
                     @Override
                     public void run() {

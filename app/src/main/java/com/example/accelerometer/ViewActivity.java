@@ -147,7 +147,7 @@ public class ViewActivity extends AppCompatActivity implements View.OnClickListe
         try {
             //Testテーブルにあげるもの
             //cursor = db.rawQuery("SELECT * from Test01db",null);
-            cursor = db.rawQuery("SELECT * from Test01db; ",null);
+            cursor = db.rawQuery("SELECT * from Test01db where filename>=20190623060600; ",null);
             cursor.moveToFirst();
             if (cursor.getCount() > 0){
                 Integer[] data = new Integer[cursor.getCount()];
