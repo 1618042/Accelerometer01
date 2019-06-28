@@ -14,10 +14,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class AsyncHttp extends AsyncTask<String, Integer, Boolean> {
-    Double id, x_axis, y_axis, z_axis, latitude, longitude;
+    Double id, x_axis, y_axis, z_axis, latitude, longitude, altitude;
     String time, filename;
 
-    public AsyncHttp(Double id, String time, String filename, Double x_axis, Double y_axis, Double z_axis, Double latitude,Double longitude) {
+    public AsyncHttp(Double id, String time, String filename, Double x_axis, Double y_axis, Double z_axis, Double latitude,Double longitude, Double altitude) {
         this.id = id;
         this.time = time;
         this.filename = filename;
@@ -26,6 +26,7 @@ public class AsyncHttp extends AsyncTask<String, Integer, Boolean> {
         this.z_axis = z_axis;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.altitude = altitude;
     }
 
     HttpURLConnection urlConnection = null; //HTTPコネクション管理用
@@ -42,7 +43,7 @@ public class AsyncHttp extends AsyncTask<String, Integer, Boolean> {
             urlConnection = (HttpURLConnection)url.openConnection();
             urlConnection.setRequestMethod("POST");
             urlConnection.setDoOutput(true);
-            String postDataSample = "id="+this.id+"&time="+this.time+"&management_id="+this.filename+"&x_axis="+this.x_axis+"&y_axis="+this.y_axis+"&z_axis="+this.z_axis+"&latitude="+this.latitude+"&longitude="+this.longitude;
+            String postDataSample = "id="+this.id+"&time="+this.time+"&management_id="+this.filename+"&x_axis="+this.x_axis+"&y_axis="+this.y_axis+"&z_axis="+this.z_axis+"&latitude="+this.latitude+"&longitude="+this.longitude+"&altitude="+this.altitude;
             OutputStream out = urlConnection.getOutputStream();
             out.write(postDataSample.getBytes());
             System.out.println(postDataSample);

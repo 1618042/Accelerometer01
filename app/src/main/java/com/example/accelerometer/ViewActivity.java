@@ -94,10 +94,10 @@ public class ViewActivity extends AppCompatActivity implements View.OnClickListe
             if (cursor.getCount() > 0){
                 Integer[] data = new Integer[cursor.getCount()];
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.support_simple_spinner_dropdown_item);
-                adapter.add("id, time, filename, x_axis, y_axis, z_axis, latitude, longitude                                                                     ");
+                adapter.add("id, time, filename, x_axis, y_axis, z_axis, latitude, longitude, altitude                                                                     ");
                 for (int cnt = 0; cnt < cursor.getCount(); cnt++){
                     data[cnt] = cursor.getInt(0);
-                    adapter.add(""+cursor.getString(0)+", "+cursor.getString(1)+", "+cursor.getString(2)+", "+cursor.getString(3)+", "+cursor.getString(4)+", "+cursor.getString(5)+", "+cursor.getString(6)+", "+cursor.getString(7));
+                    adapter.add(""+cursor.getString(0)+", "+cursor.getString(1)+", "+cursor.getString(2)+", "+cursor.getString(3)+", "+cursor.getString(4)+", "+cursor.getString(5)+", "+cursor.getString(6)+", "+cursor.getString(7)+", "+ cursor.getString(8));
                     cursor.moveToNext();
                     listView.setAdapter(adapter);
                 }
@@ -156,7 +156,7 @@ public class ViewActivity extends AppCompatActivity implements View.OnClickListe
                     if (Double.parseDouble(cursor.getString(2)) != Double.parseDouble(file_id[i])){
                         i++;
                     }
-                    AsyncHttp post = new AsyncHttp(cursor.getDouble(0), cursor.getString(1), file_id[i], cursor.getDouble(3), cursor.getDouble(4), cursor.getDouble(5), cursor.getDouble(6), cursor.getDouble(7));
+                    AsyncHttp post = new AsyncHttp(cursor.getDouble(0), cursor.getString(1), file_id[i], cursor.getDouble(3), cursor.getDouble(4), cursor.getDouble(5), cursor.getDouble(6), cursor.getDouble(7), cursor.getDouble(8));
                     post.execute();
                     cursor.moveToNext();
                 }
