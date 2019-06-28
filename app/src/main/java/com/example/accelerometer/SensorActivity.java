@@ -79,7 +79,7 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
         buuttonset();
         //back_to_main();
 
-        timer = new Timer();
+        //timer = new Timer();
         /*timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -111,11 +111,13 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
                     if (findViewById(checkedId) == radioButton1){
                         //if (Hz==0){
                             Hz = 1000;
+                            System.out.println(Hz);
                         //}
                     }
                     if (findViewById(checkedId) == radiobutton2){
                         //if (Hz==0){
                             Hz = 125;
+                            System.out.println(Hz);
                         //}
                     }
                 } else {
@@ -132,6 +134,8 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
     }
     public void onLocationChanged(Location location){
         location1 = location;
+        System.out.println("location : "+location.getLatitude()+", "+location.getLongitude()+", "+location.getAltitude());
+        count = count+1;
     }
     public void onStatusChanged(String provider, int status, Bundle extras){
 
@@ -177,6 +181,7 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
                 break;
             case R.id.start_button :
                 if (Hz != 0) {
+                    timer = new Timer();
                     Calendar calendar  = Calendar.getInstance();
                     simpleDateFormatname = new SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault());
                     filename = simpleDateFormatname.format(calendar.getTime());
@@ -214,7 +219,7 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
                         locationnull = location1.getLatitude();
                     }
                 }
-                count = count+1;
+
                 if (event1 != null){
                     if(location1 != null){
                         //text = "time:"+time+"filename:"+filename+", x:"+event1.values[0]+", y:"+event1.values[1]+", z:"+event1.values[2]+", latitude:"+location1.getLatitude()+", longitude:"+location1.getLongitude();
