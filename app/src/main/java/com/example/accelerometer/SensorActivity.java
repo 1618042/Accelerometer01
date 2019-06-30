@@ -70,6 +70,11 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
     String filename;
     int j = 0;
     String text1;
+
+    int kmlstart_i = 0;
+    FileWriter fileWriter2;
+    PrintWriter printWriter2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -253,6 +258,7 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
                 });
                 insertData();
                 csvFile();
+                kmlFile();
             }
         },0, Hz);//1Hz 1000ミリ秒, 8Hz 125ミリ秒
     }
@@ -263,6 +269,18 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
         String stop = "FINISH";
         textView01.setText(stop);
         System.out.println("stopclick time:"+time+", event:null");
+
+        if (kmlstart_i == 1) {
+            try {
+                fileWriter2 = new FileWriter(getFilesDir() + "/" + filename + ".kml", true);
+                printWriter2 = new PrintWriter(new BufferedWriter(fileWriter2));
+                printWriter2.println("</Document>\n</kml>"); //kml file finish
+                printWriter2.println();
+                printWriter2.close();
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+        }
     }
 
     public void csvFile(){
@@ -301,6 +319,42 @@ public class SensorActivity extends AppCompatActivity implements View.OnClickLis
             e.printStackTrace();
         }
     }
+
+    private void kmlFile(){
+        String kmlstart = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n<Document>\n";
+
+        try{
+            fileWriter2 = new FileWriter(getFilesDir()+"/"+filename+".kml", true);
+            printWriter2 = new PrintWriter(new BufferedWriter(fileWriter2));
+
+            String[] datas1;
+
+            if (location1 != null) {
+                datas1 = new String[]{time, String.valueOf(location1.getLatitude()), String.valueOf(location1.getLongitude()), String.valueOf(location1.getAltitude())};
+            } else {
+                datas1 = new String[]{time, String.valueOf(location1), String.valueOf(location1), String.valueOf(location1)};
+            }
+
+            if (kmlstart_i == 0) {
+                kmlstart_i = 1;
+                printWriter2.print(kmlstart);
+            }
+            if (location1 != null) {
+                printWriter2.println("<Placemark>");
+                printWriter2.println("<name>" + datas1[0] + "</name>");
+                printWriter2.println("<description>" + datas1[0] + "</description>");
+                printWriter2.println("<Point>\n<coordinates>" + datas1[2] + ", " + datas1[1] + ", " + datas1[3] + "</coordinates>\n</Point>");
+                printWriter2.println("</Placemark>");
+            }
+
+            printWriter2.println();
+            printWriter2.close();
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
     private void insertData(){
         helper = new OpenHelper(this);
         db = helper.getWritableDatabase();

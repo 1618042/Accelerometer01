@@ -88,13 +88,13 @@ public class ViewActivity extends AppCompatActivity implements View.OnClickListe
         db = helper.getReadableDatabase();
         try{
             //画面表示
-            cursor = db.rawQuery("SELECT * from Test01db ;",null);
+            cursor = db.rawQuery("SELECT * from Test01db where filename>=20190630101557;",null);
             System.out.println(cursor);
             cursor.moveToFirst();
             if (cursor.getCount() > 0){
                 Integer[] data = new Integer[cursor.getCount()];
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.support_simple_spinner_dropdown_item);
-                adapter.add("id, time, filename, x_axis, y_axis, z_axis, latitude, longitude, altitude                                                                     ");
+                adapter.add("id, time, filename, x_axis, y_axis, z_axis, latitude, longitude, altitude                                                                                                      ");
                 for (int cnt = 0; cnt < cursor.getCount(); cnt++){
                     data[cnt] = cursor.getInt(0);
                     adapter.add(""+cursor.getString(0)+", "+cursor.getString(1)+", "+cursor.getString(2)+", "+cursor.getString(3)+", "+cursor.getString(4)+", "+cursor.getString(5)+", "+cursor.getString(6)+", "+cursor.getString(7)+", "+ cursor.getString(8));
@@ -147,7 +147,7 @@ public class ViewActivity extends AppCompatActivity implements View.OnClickListe
         try {
             //Testテーブルにあげるもの
             //cursor = db.rawQuery("SELECT * from Test01db",null);
-            cursor = db.rawQuery("SELECT * from Test01db where filename>=20190623060600; ",null);
+            cursor = db.rawQuery("SELECT * from Test01db where filename>=20190630101557; ",null);
             cursor.moveToFirst();
             if (cursor.getCount() > 0){
                 Integer[] data = new Integer[cursor.getCount()];
